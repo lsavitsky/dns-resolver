@@ -1,3 +1,6 @@
+"""
+References: https://hackernoon.com/how-to-set-up-a-local-dns-server-with-python
+"""
 #http_server.py
 
 import http.server
