@@ -1,66 +1,49 @@
 from enum import Enum
 from collections import defaultdict
 
-file = "domain/redpanda.cache"
-class AuthMapper(Enum):
-    
-    def __init__(self) -> None:
+class AuthMapper:
+    def __init__(self, file: str) -> None:
+        self.file = file
         self.map = self.create_dyn_enum()
-        
-    @staticmethod
-    def read_cache_save_dic(file : str):
-        res = defaultdict(dict) # initialize dic of records
 
-        with open (file, 'r') as feed:
+    @staticmethod
+    def read_cache_save_dic(file: str):
+        res = defaultdict(dict)  # Initialize dict of records
+
+        with open(file, 'r') as feed:
             while True:
                 line = feed.readline()
                 if not line:
                     break
-                
-                if line[0] != ';' and  line[0] != '.':
-                    lineList=line.split()
-                    
+
+                if line[0] != ';' and line[0] != '.':
+                    lineList = line.split()
                     rootserver, num, record, IPdest = lineList[0], lineList[1], lineList[2], lineList[3]
-                    
-                    if res[rootserver].get('record'):
+
+                    if 'record' in res[rootserver]:
                         res[rootserver]['record'][record] = IPdest
                     else:
-                        res[rootserver]['record'] = {record: IPdest} # initialize it
-                        res[rootserver]['num'] = num # only need to set it once
+                        res[rootserver]['record'] = {record: IPdest}  # Initialize it
+                        res[rootserver]['num'] = num  # Only set it once
 
         return res
-    
-    def create_dyn_enum(file : str):
-        res = AuthMapper.read_cache_save_dic(file)
-        res2 = {}
-        
+
+    def create_dyn_enum(self):
+        res = self.read_cache_save_dic(self.file)
+        dynamic_enums = {}
+
         for key, value in res.items():
-            print(key, value['record'], value['num'])
-            record = Enum('record', ((key, val) for key, val in value['record'].items()))
-            num = Enum('num', ('num', str(value['num'])))
-            #print("A RECORD:", record.AAAA.value) #EXAMPLE DONT DELETE
-            print("enum stuff: ", Enum('record', ((key, val) for key, val in value['record'].items())))
-            print("num stuff", num.num.value)
-            res2[key] = Enum('AuthMapper', [record, num]) # add root servers to the hashmap
-            
-            # # first 
-            # ls = []
-            
-            # for innerKey, innerValue in value.items():
-            #     if innerKey == 'num':
-            #         ls.append(Emum('num', innerValue))
-            #     else:
-            #         ls.append(Emum('record', innerValue))
-                    
-            
-        print(list(res2["A.ROOT-SERVERS.NET."]))
-        return res2
+            record_enum = Enum(f"{key}_Record", value['record'])
+            num_enum = Enum(f"{key}_Num", {'Num': value['num']})
+            dynamic_enums[key] = {'record': record_enum, 'num': num_enum}
+
+        return dynamic_enums
     
-cacheDic = AuthMapper.create_dyn_enum( file)
+# domain file
+file = "domain/redpanda.cache"
+auth_mapper = AuthMapper(file)
 
-print(cacheDic['A.ROOT-SERVERS.NET.'])
-
-
-
-
-
+for rootserver, enums in auth_mapper.map.items():
+    print(f"Rootserver: {rootserver}")
+    print(f"Records Enum: {list(enums['record'])}")
+    print(f"Num Enum: {list(enums['num'])}")
