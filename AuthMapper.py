@@ -17,7 +17,9 @@ class AuthMapper:
 
     @staticmethod
     def read_cache_save_dic(file: str):
-        """
+        """ This function reads the cache file and saves the records in a dictionary
+        :param file: file path
+        :return: dictionary with rootserver as key and record as value
         """
         res = defaultdict(dict)  # Initialize dict of records
 
@@ -40,6 +42,12 @@ class AuthMapper:
         return res
 
     def create_dyn_enum(self):
+        """ This function creates the dynamic enumeration.
+        You can access the enumeration by AuthMapper[rootserver_key].A.value
+        The number of records is stored in AuthMapper[rootserver_key].Num.value
+        
+        :return: dictionary with rootserver as key and enumeration as value
+        """
         res = self.read_cache_save_dic(self.file)
         dynamic_enums = {}
 
