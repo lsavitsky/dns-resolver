@@ -1,6 +1,15 @@
 from enum import Enum
 from collections import defaultdict
+"""
+    *** ENUM TYPE LASS FOR AUTH MAPPER ***
+    ** IP ADDRESS -> RECORD TYPE -> IP **
 
+    The AuthMapper is a dictonary with RootServers as keys and their correspondung enumerations as the values.
+    There are three eneumeration types: A, AAAA, and Num. 
+
+    To access the record enumeration do AuthMapper[rootserver_key].A.value or AuthMapper[rootserver_key].AAAA.value
+    or AuthMapper[rootserver_key].Num.value
+"""
 class AuthMapper:
     def __init__(self, file: str) -> None:
         self.file = file
@@ -8,6 +17,8 @@ class AuthMapper:
 
     @staticmethod
     def read_cache_save_dic(file: str):
+        """
+        """
         res = defaultdict(dict)  # Initialize dict of records
 
         with open(file, 'r') as feed:
@@ -33,17 +44,24 @@ class AuthMapper:
         dynamic_enums = {}
 
         for key, value in res.items():
-            record_enum = Enum(f"{key}_Record", value['record'])
-            num_enum = Enum(f"{key}_Num", {'Num': value['num']})
-            dynamic_enums[key] = {'record': record_enum, 'num': num_enum}
+            new_dic = value['record']
+            new_dic['Num'] = value['num']
+            dynamic_enums[key] = Enum(f"{key}", new_dic)
 
         return dynamic_enums
     
-# domain file
-file = "domain/redpanda.cache"
-auth_mapper = AuthMapper(file)
+def main ():
+    file = "domain/redpanda.cache"
+    auth_mapper = AuthMapper(file).map
 
-for rootserver, enums in auth_mapper.map.items():
-    print(f"Rootserver: {rootserver}")
-    print(f"Records Enum: {list(enums['record'])}")
-    print(f"Num Enum: {list(enums['num'])}")
+    for rootserver in auth_mapper.keys():
+        print(auth_mapper[rootserver].A.value)
+        print(auth_mapper[rootserver].AAAA.value)
+        print(auth_mapper[rootserver].Num.value)
+    
+##For testing purposes 
+# domain file
+if __name__ == "__main__": 
+    main()
+    
+
