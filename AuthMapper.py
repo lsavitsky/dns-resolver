@@ -1,7 +1,7 @@
 from enum import Enum
 from collections import defaultdict
 
-file = "../domain/redpanda.cache"
+file = "domain/redpanda.cache"
 class AuthMapper(Enum):
     
     def __init__(self) -> None:
@@ -19,7 +19,7 @@ class AuthMapper(Enum):
                 
                 if line[0] != ';' and  line[0] != '.':
                     lineList=line.split()
-                    # print(lineList)
+                    
                     rootserver, num, record, IPdest = lineList[0], lineList[1], lineList[2], lineList[3]
                     
                     if res[rootserver].get('record'):
