@@ -12,9 +12,9 @@ DIRECTORY = "html_files"
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler): 
     def do_GET(self):
         if self.path == '/a.com':
-            self.path = '/a.html'
+            self.path = '/a.html' #change these to the location of the html file
         elif self.path == '/b.com':
-            self.path = '/b.html'
+            self.path = '/b.html' #change these to location of the html file
         return http.server.SimpleHTTPRequestHandler.do_GET(self)
 
     def translate_path(self, path):

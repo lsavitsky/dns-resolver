@@ -5,7 +5,7 @@ from collections import defaultdict
     ** IP ADDRESS -> RECORD TYPE -> IP **
 
     The AuthMapper is a dictonary with RootServers as keys and their correspondung enumerations as the values.
-    There are three eneumeration types: A, AAAA, and Num. 
+    There are three enumeration types: A, AAAA, and Num. 
 
     To access the record enumeration do AuthMapper[rootserver_key].A.value or AuthMapper[rootserver_key].AAAA.value
     or AuthMapper[rootserver_key].Num.value
