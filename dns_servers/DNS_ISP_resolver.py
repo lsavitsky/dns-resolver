@@ -12,8 +12,8 @@ sys.path.append("../dns_caches/")
 # This is a simple DNS resolver that can resolve certain types of DNS queries.s
 class DNS_ISP_resolver(Resolver ):
     """
-    This class is a simple DNS resolver that can resolve certain types of DNS queries.
-    It is designed to be used with an object of the class.
+    ISP DNS resolver. Resolves queries using a ISP cache,
+    falling back to the main resolver if necessary.
     """
     DOMAIN_TO_IP={}
     
