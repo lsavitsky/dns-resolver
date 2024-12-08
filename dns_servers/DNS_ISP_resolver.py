@@ -1,7 +1,6 @@
 from dnslib import DNSRecord, DNSError, QTYPE, RCODE, RR
 from pathlib import Path
 from DNS_resolver import Resolver
-import sys
 
 class DNS_ISP_resolver(Resolver):
     """

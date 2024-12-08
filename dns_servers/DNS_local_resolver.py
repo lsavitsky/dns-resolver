@@ -36,7 +36,7 @@ class DNS_Local_resolver(DNS_ISP_resolver):
             return res  # return res from the local cache
 
         print(f"  {domain} not found in local cache.")
-        print("  Falling back to ISP resolver...")
+        print("Falling back to ISP resolver...")
         # Fallback to the ISP resolver if not found in the local cache
         return super().resolve(domain)
   
@@ -44,9 +44,14 @@ class DNS_Local_resolver(DNS_ISP_resolver):
 def main():
     resolver = DNS_Local_resolver()
     redPanda = resolver.resolve("redpanda.com")
-    print("  ", redPanda.A.value)
-    print("  ", redPanda.AAAA.value)
-    print("  ", redPanda.Num.value)
+    print("  A:", redPanda.A.value)
+    print("  AAAA:", redPanda.AAAA.value)
+    print("  Num:", redPanda.Num.value)
+    
+    example = resolver.resolve("example.com")
+    print("  A:", example.A.value)
+    print("  AAAA:", example.AAAA.value)
+    print("  Num:", example.Num.value)
     
 
 if __name__ == "__main__":
