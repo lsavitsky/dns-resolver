@@ -20,7 +20,7 @@ class DNS_Root_resolver(Resolver):
         # self.tld_map = self.parse_root_cache(root_cache)
 
     @staticmethod
-    def parse_root_cache(file: Path) -> dict:
+    def parse_root_cache(file: Path) -> dict: # don't need this method but leaving it for now in case I am wrong
         """
         Parses the root.cache file to extract TLD mappings.
 
