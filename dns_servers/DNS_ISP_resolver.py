@@ -15,7 +15,6 @@ class DNS_ISP_resolver(Resolver):
         :param file: Path to the ISP cache file.
         """
         super().__init__(file)  # inherit initialization from Resolver
-        self.ISP_map = self.cache_map
         
     def resolve(self, domain: str) -> str:
         """
@@ -24,13 +23,15 @@ class DNS_ISP_resolver(Resolver):
         :param domain: The domain name to resolve.
         :return: Resolved IP address or 'NXDOMAIN' if not found.
         """
-        return self.ISP_map.get(domain, "NXDOMAIN")
+        return self.cache_map.get(domain, "NXDOMAIN")
 
 def main():
     isp_resolver = DNS_ISP_resolver()
-    print(isp_resolver.resolve("google.com"))
-    print(isp_resolver.resolve("example.com"))
-    print(isp_resolver.resolve("example.net"))
+    
+    isp_resolver.print_result(isp_resolver.resolve("google.com"))
+    isp_resolver.print_result(isp_resolver.resolve("yahoo.com"))
+    isp_resolver.print_result(isp_resolver.resolve("example.com"))
+    
     
 
 if __name__ == "__main__":
