@@ -24,7 +24,7 @@ class RecursiveDNSServer:
         :param port: Port to communicate with DNS servers (default is 53).
         """
         self.local_resolver = DNS_Local_resolver()
-        self.auth_mapper = DNS_Root_resolver()
+        self.root_resolver = DNS_Root_resolver()
         self.port = port
         
     def resolve(self, domain: str) -> str:
