@@ -19,7 +19,6 @@ class DNS_Local_resolver(DNS_ISP_resolver):
         Initialize the local resolver with its own cache and the ISP resolver's cache.
         """
         super().__init__(isp_file)  # create the ISP resolver (fallback)
-        print("Loading local cache...")
         self.local_cache = self.read_dns_cache(local_file)  # Load the local cache
     
     def resolve(self, domain: str) -> str:

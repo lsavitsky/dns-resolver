@@ -63,5 +63,14 @@ class DNS_Root_resolver(Resolver):
         :param tld: TLS SERVER ( 'com', 'org').
         :return: Root server info or 'NXDOMAIN' 
         """
-        return super().cache_map.get(tld, "NXDOMAIN")
+        return self.cache_map.get(tld, "NXDOMAIN")
         # return self.tld_map.get(tld, "NXDOMAIN")
+
+def main():
+    root_resolver = DNS_Root_resolver()
+    print(root_resolver.resolve("A.ROOT-SERVERS.NET."))
+    print(root_resolver.resolve("B.ROOT-SERVERS.NET."))
+    print(root_resolver.resolve("C.ROOT-SERVERS.NET."))
+    
+if __name__ == "__main__":
+    main()
