@@ -1,1 +1,4 @@
-#maybe eventually... probably not....
+
+
+class AuthoritativeDNSResolver:
+    pass # implement this class
