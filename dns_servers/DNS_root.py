@@ -1,18 +1,23 @@
 import re
 from pathlib import Path
 from collections import defaultdict
+from DNS_resolver import Resolver
+import sys
 
-class DNS_Root_resolver:
+sys.path.append("../dns_caches/")
+
+class DNS_Root_resolver(Resolver):
     """
     Root DNS resolver that provides information about TLD DNS servers.
     """
-    def __init__(self, root_cache: Path):
+    def __init__(self, root_cache: Path = Path("root.cache")):
         """
         Initializes the Root DNS Resolver by loading the root cache.
 
         :param root_cache: Path to the root cache file.
         """
-        self.tld_map = self.parse_root_cache(root_cache)
+        super().__init__(root_cache)
+        # self.tld_map = self.parse_root_cache(root_cache)
 
     @staticmethod
     def parse_root_cache(file: Path) -> dict:
@@ -36,8 +41,9 @@ class DNS_Root_resolver:
                         record_type = parts[2]
                         value = parts[3]
 
-                        if record_type == "NS": #NS record type
+                        if record_type == "NS": # NS record type
                             tld_map[tld]['NS'] = value
+                            
                         elif record_type in ["A", "AAAA"]: #REcords of A and AAAA
                             if 'IP' not in tld_map[tld]:
                                 tld_map[tld]['IP'] = []
@@ -57,4 +63,5 @@ class DNS_Root_resolver:
         :param tld: TLS SERVER ( 'com', 'org').
         :return: Root server info or 'NXDOMAIN' 
         """
-        return self.tld_map.get(tld, "NXDOMAIN")
+        return super().cache_map.get(tld, "NXDOMAIN")
+        # return self.tld_map.get(tld, "NXDOMAIN")

@@ -2,25 +2,25 @@
 Refence: https://www.iana.org/domains/root/files    - for the root file
 """
 from dnslib import DNSRecord, DNSError, QTYPE, RCODE, RR
-import AuthMapper
-import DNS_ISP_resolver
 import sys 
 from pathlib import Path
-
-sys.path.append("../dns_caches/")
+from DNS_ISP_resolver import DNS_ISP_resolver
+from DNS_resolver import Resolver
 
 # This is a simple DNS resolver that can resolve certain types of DNS queries.s
 
 class DNS_Local_resolver(DNS_ISP_resolver):
+    """
+    Local DNS resolver. Resolves queries using a local cache,
+    falling back to the ISP resolver if necessary.
+    """
     def __init__(self, local_file: Path = Path("local.cache"), isp_file: Path = Path("ISP.cache")):
         """
         Initialize the local resolver with its own cache and the ISP resolver's cache.
         """
-        
-        super().__init__(isp_file) # Initialize ISP resolver (for fallback)
-
-        # Load local cache
-        self.Local_map = self.read_dns_cache(local_file)
+        super().__init__(isp_file)  # create the ISP resolver (fallback)
+        print("Loading local cache...")
+        self.local_cache = self.read_dns_cache(local_file)  # Load the local cache
     
     def resolve(self, domain: str) -> str:
         """
@@ -29,23 +29,26 @@ class DNS_Local_resolver(DNS_ISP_resolver):
         :param domain: The domain name to resolve.
         :return: Resolved IP address or 'NXDOMAIN' if not found.
         """
-        if domain in self.Local_map:
-            return self.Local_map[domain]
-        return super().resolve(domain)  # Use ISP resolver as fallback
-           
-    # def resolve(self, file : str):
-    #     """
-    #     read_dns_cache attempts to read from the cache file and creates an
-    #     enum type AuthMapper
-        
-    #     :param: file: - the location of the cache
-    #     """
-    #     try: #check if file exists etc...
-    #         return AuthMapper(file).map
-    #     except Exception as e:
-    #         print(f"Error reading DNS cache file: {e}")
-    #         return {}
+        # attempt to resolve the domain using the local cache
+        print(f"Resolving {domain} using local cache.")
+        res = self.local_cache.get(domain)
+        if res:
+            print(f"  Found {domain} in local cache.")
+            return res  # return res from the local cache
+
+        print(f"  {domain} not found in local cache.")
+        print("  Falling back to ISP resolver...")
+        # Fallback to the ISP resolver if not found in the local cache
+        return super().resolve(domain)
+  
+# test the DNS_Local_resolver  
+def main():
+    resolver = DNS_Local_resolver()
+    redPanda = resolver.resolve("redpanda.com")
+    print("  ", redPanda.A.value)
+    print("  ", redPanda.AAAA.value)
+    print("  ", redPanda.Num.value)
     
-     
-    
-    
+
+if __name__ == "__main__":
+    main()

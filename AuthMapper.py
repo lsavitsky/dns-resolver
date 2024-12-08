@@ -1,74 +1,99 @@
 from enum import Enum
 from collections import defaultdict
-"""
-    *** ENUM TYPE LASS FOR AUTH MAPPER ***
-    ** IP ADDRESS -> RECORD TYPE -> IP **
+import sys
 
-    The AuthMapper is a dictonary with RootServers as keys and their correspondung enumerations as the values.
-    There are three enumeration types: A, AAAA, and Num. 
-
-    To access the record enumeration do AuthMapper[rootserver_key].A.value or AuthMapper[rootserver_key].AAAA.value
-    or AuthMapper[rootserver_key].Num.value
-"""
 class AuthMapper:
+    """
+    AuthMapper maintains a dictionary of root servers and their corresponding records.
+    Records are dynamically converted into enumerations (A, AAAA, Num, etc.).
+    For root server '.', the enumeration contains NS records, such that AuthMapper['.'].NS.value
+    returns the list of TLD servers and their corresponding number.
+
+    Example:
+        To access the enumeration:
+        AuthMapper[rootserver_key].A.value
+        AuthMapper[rootserver_key].AAAA.value
+        AuthMapper[rootserver_key].Num.value
+        
+        For root server '.':
+        AuthMapper['.'].NS.value[0]  # First TLD server number
+    """
     def __init__(self, file: str) -> None:
         self.file = file
         self.map = self.create_dyn_enum()
 
     @staticmethod
     def read_cache_save_dic(file: str):
-        """ This function reads the cache file and saves the records in a dictionary
-        :param file: file path
-        :return: dictionary with rootserver as key and record as value
         """
-        res = defaultdict(dict)  # Initialize dict of records
+        Reads the cache file and saves the records in a dictionary.
+        This function raises an exception if the record type is invalid or the line is invalid.
+
+        :param file: File path to the DNS cache.
+        :return: Dictionary with root server as key and records as values.
+        """
+        res = defaultdict(dict)
 
         with open(file, 'r') as feed:
-            while True:
-                line = feed.readline()
-                if not line:
-                    break
+            for line in feed:
+                if line.startswith(';') or not line.strip():
+                    continue  # Skip comments and empty lines
 
-                if line[0] != ';' and line[0] != '.':
-                    lineList = line.split()
-                    rootserver, num, record, IPdest = lineList[0], lineList[1], lineList[2], lineList[3]
+                line_list = line.split()
+                if len(line_list) != 4:
+                    raise InvalidCacheLineError(line)
 
-                    if 'record' in res[rootserver]:
-                        res[rootserver]['record'][record] = IPdest
-                    else:
-                        res[rootserver]['record'] = {record: IPdest}  # Initialize it
-                        res[rootserver]['num'] = num  # Only set it once
+                rootserver, num, record, ip_dest = line_list
 
+                if record == "NS":
+                    res[rootserver].setdefault("NS", {})[ip_dest] = num
+                elif record in {"A", "AAAA"}:
+                    record_data = res[rootserver].setdefault("record", {})
+                    record_data[record] = ip_dest
+                    res[rootserver]["num"] = num  # Store the number of records
+                else:
+                    raise InvalidRecordTypeError(record)
         return res
 
+
     def create_dyn_enum(self):
-        """ This function creates the dynamic enumeration.
-        You can access the enumeration by AuthMapper[rootserver_key].A.value
-        The number of records is stored in AuthMapper[rootserver_key].Num.value
-        
-        :return: dictionary with rootserver as key and enumeration as value
         """
-        res = self.read_cache_save_dic(self.file)
+        Creates dynamic enumerations for root server records.
+
+        Each root server key maps to an Enum containing record types (A, AAAA, NS, etc.)
+        and the number of records (Num).
+
+        :return: Dictionary with root server as key and enumeration as value.
+        """
+        cache_data = self.read_cache_save_dic(self.file)
         dynamic_enums = {}
 
-        for key, value in res.items():
-            new_dic = value['record']
-            new_dic['Num'] = value['num']
-            dynamic_enums[key] = Enum(f"{key}", new_dic)
+        for rootserver, records in cache_data.items():
+            enum_data = {}
+            if "record" in records:
+                enum_data.update(records["record"])
+                enum_data["Num"] = records["num"]
+            elif "NS" in records:
+                enum_data["NS"] = records["NS"]
+            else:
+                raise ValueError(f"No valid records found for root server: {rootserver}")
+
+            dynamic_enums[rootserver] = Enum(f"{rootserver}", enum_data)
 
         return dynamic_enums
     
 def main ():
-    file = "domain/redpanda.cache"
+    file = "dns_caches/root.cache"
     auth_mapper = AuthMapper(file).map
 
     for rootserver in auth_mapper.keys():
-        print(auth_mapper[rootserver].A.value)
-        print(auth_mapper[rootserver].AAAA.value)
-        print(auth_mapper[rootserver].Num.value)
-    
-##For testing purposes 
-# domain file
+        if rootserver != '.':
+            print(auth_mapper[rootserver].A.value)
+            print(auth_mapper[rootserver].AAAA.value)
+            print(auth_mapper[rootserver].Num.value)
+            
+        else:
+            print(auth_mapper[rootserver].NS.value)
+
 if __name__ == "__main__": 
     main()
     

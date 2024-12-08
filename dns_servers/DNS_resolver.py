@@ -1,23 +1,57 @@
-import AuthMapper
 from pathlib import Path
 import sys 
 
-sys.path.append("../dns_caches/")
+cache_path = Path("../dns_caches/")
 
-class Resolver():
+sys.path.append("..")
+from AuthMapper import AuthMapper
+
+sys.path.append("../validation/") 
+import InvalidCacheLineError
+import InvalidRecordTypeError
+
+class Resolver:
+    """
+    Base DNS Resolver class. Provides a method for reading DNS cache files.
+    """
     def __init__(self, file: Path):
-        pass
+        """
+        Initializes the resolver with a cache file path.
+        
+        :param file: Path to the DNS cache file.
+        """
+        self.file_cache = file
+        self.cache_map = self.read_dns_cache(file) # initialize the cache data
 
-    def read_dns_cache(self, file : str):
+    def read_dns_cache(self, file: Path) -> dict:
         """
-            read_dns_cache attempts to read from the cache file and creates an
-            enum type AuthMapper
-            
-            :param: file: - the location of the cache
+        Reads the DNS cache file and returns a dictionary of mappings.
+
+        :param file: Path to the cache file.
+        :return: Dictionary of domain-to-IP mappings.
         """
+        file = cache_path / file
+        
+        print(f"Reading DNS cache file {file}...")  
+        
+        if not file.exists():
+            print(f"Error: Cache file {file} does not exist.")
+            return {}
         try:
             return AuthMapper(file).map
+        except FileNotFoundError:
+            print(f"Error: Cache file {file} not found.")
+        except PermissionError:
+            print(f"Error: Permission denied for file {file}.")
         except Exception as e:
-            print(f"Error reading DNS cache file: {e}")
-            return {}
-        
+            print(f"Unexpected error while reading DNS cache file: {e}")
+        return {}
+    
+    def resolve(self, domain: str) -> str:
+        """
+        Resolves a domain name. This base method should be overridden by subclasses.
+
+        :param domain: The domain name to resolve.
+        :return: Resolved IP address or 'NXDOMAIN' if not found.
+        """
+        raise NotImplementedError("Subclasses must implement the resolve method.")
