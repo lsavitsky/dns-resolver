@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys 
+import enum
 
 cache_path = Path("../dns_caches/")
 
@@ -22,6 +23,13 @@ class Resolver:
         """
         self.file_cache = file
         self.cache_map = self.read_dns_cache(file) # initialize the cache data
+        
+    def __str__(self):
+        """
+        Returns a string representation of the resolver.
+        """
+        for key, value in self.cache_map.items():
+            print(f"{key}: {value}")
 
     def read_dns_cache(self, file: Path) -> dict:
         """
@@ -55,3 +63,28 @@ class Resolver:
         :return: Resolved IP address or 'NXDOMAIN' if not found.
         """
         raise NotImplementedError("Subclasses must implement the resolve method.")
+    
+    
+    def print_result(self, res: object) -> None:
+        """
+        Prints the resolved value of a domain name.
+
+        :param res: The resolved value to print.
+        """
+        if res == "NXDOMAIN":
+            print("Domain not found.")
+        elif isinstance(res, enum.EnumType):
+            # Handle Enum-based responses
+            print("Resolved Record:")
+            if hasattr(res, "A"):
+                print("  A:", res.A.value)
+            if hasattr(res, "AAAA"):
+                print("  AAAA:", res.AAAA.value)
+            if hasattr(res, "Num"):
+                print("  Num:", res.Num.value)
+            if hasattr(res, "NS"):
+                print("  NS:", res.NS.value)
+        else:
+            # Handle unexpected record types
+            raise InvalidRecordTypeError.InvalidRecordTypeError(f"Invalid record type: {type(res)}")
+

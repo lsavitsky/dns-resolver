@@ -5,10 +5,8 @@ from dnslib import DNSRecord, DNSError, QTYPE, RCODE, RR
 import sys 
 from pathlib import Path
 from DNS_ISP_resolver import DNS_ISP_resolver
-from DNS_resolver import Resolver
 
 # This is a simple DNS resolver that can resolve certain types of DNS queries.s
-
 class DNS_Local_resolver(DNS_ISP_resolver):
     """
     Local DNS resolver. Resolves queries using a local cache,
@@ -44,14 +42,10 @@ class DNS_Local_resolver(DNS_ISP_resolver):
 def main():
     resolver = DNS_Local_resolver()
     redPanda = resolver.resolve("redpanda.com")
-    print("  A:", redPanda.A.value)
-    print("  AAAA:", redPanda.AAAA.value)
-    print("  Num:", redPanda.Num.value)
+    resolver.print_result(redPanda)
     
-    example = resolver.resolve("example.com")
-    print("  A:", example.A.value)
-    print("  AAAA:", example.AAAA.value)
-    print("  Num:", example.Num.value)
+    redPanda = resolver.resolve(".")
+    resolver.print_result(redPanda)
     
 
 if __name__ == "__main__":
