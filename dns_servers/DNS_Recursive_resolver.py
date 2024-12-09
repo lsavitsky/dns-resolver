@@ -1,14 +1,17 @@
 import socket
 from dnslib import DNSRecord, QTYPE, RCODE
 from pathlib import Path
-from DNS_local_resolver import DNS_Local_resolver  # isp resolver
+
+# Importing the resolvers
 from DNS_root import DNS_Root_resolver  # root resolver
+from DNS_TLD_resolver import DNS_TLD_resolver  # tld resolver
+from DNS_authoritative_resolver import DNS_authoritative_resolver  # authoritative resolver
 
 class DNS_Recursive_resolver:
     """
     Recursive DNS server that resolves domain names using local, ISP, and root server caches.
     """
-    def __init__(self, root_file: Path = Path("root.cache"), tld_file: Path =Path(""), authoritative_file: Path =Path("")):
+    def __init__(self, root_file: Path("root.cache"), tld_file: Path = Path("TLD.cache"), authoritative_file: Path = Path("authorative.cache")):
         """
         Initializes the recursive DNS server.
         #TODO Fix this docstring
@@ -18,8 +21,8 @@ class DNS_Recursive_resolver:
         :param port: Port to communicate with DNS servers (default is 53).
         """
         self.root_resolver = DNS_Root_resolver(root_file)
-        self.tld_resolvers = tld_resolvers
-        self.authoritative_resolvers = authoritative_resolvers
+        self.tld_resolvers = DNS_TLD_resolver(tld_file)
+        self.authoritative_resolvers = DNS_authoritative_resolver(authoritative_file)
 
     def resolve(self, domain: str) -> str:
         """
@@ -30,7 +33,7 @@ class DNS_Recursive_resolver:
         """
         parts = domain.split('.')
         if len(parts) < 2:
-            return "NXDOMAIN" #Enough parts of it neededd
+            return "NXDOMAIN" # Enough parts of it neededd
 
         tld = parts[-1]
         zone = f"{parts[-2]}.{tld}"
@@ -40,7 +43,7 @@ class DNS_Recursive_resolver:
         if root_info == "NXDOMAIN":
             return "NXDOMAIN"
 
-        tld_ns = root_info['NS'] #This is the ns root info
+        tld_ns = root_info['NS'] # This is the ns root info
         tld_ip = root_info['IP'][0]  #Change for the IP selection desired. right now it is the first one found
 
         # Query TLD Resolver
@@ -58,4 +61,3 @@ class DNS_Recursive_resolver:
             return "NXDOMAIN"
 
         return authoritative_resolver.resolve(domain)
-

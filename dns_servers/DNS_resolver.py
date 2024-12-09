@@ -23,7 +23,7 @@ class Resolver:
         """
         self.file_cache = file
         self.cache_map = self.read_dns_cache(file) # initialize the cache data
-        
+
     def read_dns_cache(self, file: Path) -> dict:
         """
         Reads the DNS cache file and returns a dictionary of mappings.
