@@ -24,13 +24,6 @@ class Resolver:
         self.file_cache = file
         self.cache_map = self.read_dns_cache(file) # initialize the cache data
         
-    def __str__(self):
-        """
-        Returns a string representation of the resolver.
-        """
-        for key, value in self.cache_map.items():
-            print(f"{key}: {value}")
-
     def read_dns_cache(self, file: Path) -> dict:
         """
         Reads the DNS cache file and returns a dictionary of mappings.
