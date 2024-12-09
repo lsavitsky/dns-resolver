@@ -41,6 +41,8 @@ class dns_counters:
         # Put them together uses byteof_ made method
         counters = [self.byteof_("qdcount"), self.byteof_("ancount"), self.byteof_("nscount"), self.byteof_("arcount")]
         return b"".join(counters)
+    
+    
     def byteof_(self, counter_name_type : str) -> bytes:
         """
         byteof_  gives the bytes for just the one counter desired

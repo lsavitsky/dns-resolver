@@ -1,4 +1,3 @@
-from dnslib import DNSRecord, DNSError, QTYPE, RCODE, RR
 from pathlib import Path
 from DNS_resolver import Resolver
 from enum import Enum

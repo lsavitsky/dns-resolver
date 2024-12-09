@@ -1,5 +1,4 @@
 import socket
-from dnslib import DNSRecord, QTYPE, RCODE
 from pathlib import Path
 
 # Importing the resolvers
