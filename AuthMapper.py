@@ -79,7 +79,8 @@ class AuthMapper:
         
         data = {"TLD": defaultdict(dict), "Direct" : defaultdict(dict)} # enums for the TLD and Domains
         
-        category = 'TLD'
+        category = ('Direct', None)
+        
         with open(file, 'r') as feed:
             for line in feed:
                 if line.startswith(';') or not line.strip():
@@ -95,17 +96,29 @@ class AuthMapper:
                 
                 if record == "NS":
                     if rootserver == ".":
-                        category = 'Direct' # Has the webserver
-                        
+                        category = ('Direct', None)
                     else:
-                        category = 'TLD' # Has the TLD server for next access
+                        category = ('TLD', rootserver)
 
                 elif record in {"A", "AAAA", "NS"}:
+                    if category[0] == "TLD":
+                        res.setdefault(category[0], {})
+                        res[category[0]].setdefault(category[1], {
+                            "NS": rootserver,
+                            "ttl": ttl,
+                            "record": {}
+                        })
+                        
+                        rootserver = category[1]
 
-                    if rootserver not in res[category]:
-                        res[category][rootserver] = {"record": {}, "ttl": ttl}
-                    
-                    res[category][rootserver]["record"][record] = ip_dest
+                    elif category[0] == "Direct":
+                        res.setdefault(category[0], {})
+                        res[category[0]].setdefault(rootserver, {
+                            "record": {},
+                            "ttl": ttl
+                        })
+
+                    res[category[0]][rootserver]["record"][record] = ip_dest
 
                 else:
                     raise InvalidRecordTypeError(record)
@@ -128,14 +141,16 @@ class AuthMapper:
             catgory_data[category] = {}
             
             for rootserver, records in values.items():
-
                 enum_data = {}
                 if "record" in records:
                     enum_data.update(records["record"])
                     enum_data["ttl"] = records["ttl"]
+                    
+                    if category == 'TLD':
+                        enum_data['NS'] = records['NS']
                 else:
                     raise ValueError(f"No valid records found for root server: {rootserver}")
-
+                
                 catgory_data[category][rootserver] = Enum(f"{rootserver}", enum_data)
 
         return Enum("Category", catgory_data)
@@ -145,8 +160,7 @@ def main ():
     file = "dns_caches/root.cache"
     auth_mapper = AuthMapper(file).map
 
-    print(auth_mapper.TLD.value['ORG-TLD.DNS.NET.'].A.value)
-    print(auth_mapper.Direct.value['A.ROOT-SERVERS.NET.'].AAAA.value)
+    print(auth_mapper.TLD.value['ORG.'].NS.value)
     # print(auth_mapper['.'].keys())
     # print(auth_mapper['.']['redpanda.NET.'].A.value)
     # print(auth_mapper['TLD'].keys())
