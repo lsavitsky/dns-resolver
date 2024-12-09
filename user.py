@@ -1,8 +1,9 @@
 import sys 
 
 sys.path.append("dns_servers/DNS_Query/dns_construction/")
-import DNS_Tunnel_enums
-import dns_question_enum
+from DNS_Tunnel_enums import EncodingType
+from dns_question_enum import QNAME, QTYPE, QCLASS
+from dns_packet import dns_packet
 
 def validate_encoding_type(encoding_type):
     """
@@ -11,8 +12,8 @@ def validate_encoding_type(encoding_type):
     :param encoding_type: The encoding type to validate.
     :return: True if the encoding type is valid, raises ValueError otherwise.
     """
-    if encoding_type not in DNS_Tunnel_enums.EncodingType.__members__:
-        raise ValueError(f"Invalid encoding type: {encoding_type}. Must be one of {', '.join(DNS_Tunnel_enums.EncodingType.__members__)}.")
+    if encoding_type not in EncodingType.__members__:
+        raise ValueError(f"Invalid encoding type: {encoding_type}. Must be one of {', '.join(EncodingType.__members__)}.")
     
     return True
 
@@ -23,8 +24,8 @@ def validate_record_type(record_type):
     :param record_type: The DNS record type to validate.
     :return: True if the record type is valid, raises ValueError otherwise.
     """
-    if not dns_question_enum.QTYPE.is_valid_name(record_type):
-        raise ValueError(f"Invalid record type: {record_type}. Must be one of {', '.join(dns_question_enum.QTYPE.__members__)}.")
+    if not QTYPE.is_valid_name(record_type):
+        raise ValueError(f"Invalid record type: {record_type}. Must be one of {', '.join(QTYPE.__members__)}.")
     
     return True
 
@@ -49,6 +50,9 @@ def validate_dns_name(dns_name):
     
     return True
 
+def controller(qname: QNAME, qtype: QTYPE = QTYPE.A, qclass: QCLASS = QCLASS.IN, transation_id= None):
+    dns_query_active = dns_packet(qname, qtype, qclass, transation_id)
+    pass
 
 def main():
     try:
@@ -79,6 +83,10 @@ def main():
         
     except KeyboardInterrupt:
         print("\nOperation canceled by user.")
+        
+    print("QTYPE: ", QTYPE[record_type])
+        
+    controller(QNAME("domain", encoding_type), QTYPE[record_type] , QCLASS.IN)
 
 if __name__ == "__main__":
     main()

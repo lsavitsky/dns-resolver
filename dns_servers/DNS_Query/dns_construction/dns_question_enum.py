@@ -148,6 +148,38 @@ class QNAME():
         encoded_data, _ = domain_name.split(".", 1) #split the end off .com
         return self.encoding.decode(encoded_data) # decode with alt of the encode
     
+    
+class q_construction:
+    """
+    Constructs the binary representation of the DNS Question Section, this will be used with the other sections to create the payload
+    including QNAME, QTYPE, and QCLASS.
+    """
+
+    def __init__(self, qname: QNAME, qtype: QTYPE = QTYPE.A, qclass: QCLASS = QCLASS.IN):
+        """
+        Initialize the Question Section with QNAME, QTYPE, and QCLASS.
+
+        :param qname: An instance of QNAME for domain name handling.
+        :param qtype: Query type (e.g., A, AAAA, MX).
+        :param qclass: Query class (e.g., IN).
+        """
+        self.qname = qname
+        self.qtype = qtype
+        self.qclass = qclass
+
+    def construct(self) -> bytes:
+        """
+        Construct the binary representation of the Question Section.
+
+        :return: The serialized Question Section as bytes.
+        """
+        # Encode QNAME into bytes
+        qname_bytes = self.qname.encode()
+        # Convert QTYPE and QCLASS to their binary representations
+        qtype_bytes = self.qtype.value.to_bytes(2, "big")
+        qclass_bytes = self.qclass.value.to_bytes(2, "big")
+        # Combine all parts into the full Question Section
+        return qname_bytes + qtype_bytes + qclass_bytes
 
 
 
