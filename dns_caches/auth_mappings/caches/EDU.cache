@@ -14,19 +14,19 @@
 ; 
 ; 
 ;
-.                        3600000      NS    redpanda.com
-redpanda.com             3600000      A     198.41.0.4
-redpanda.com             3600000      AAAA  2001:503:ba3e::2:30
+.                        3600000      NS    redpanda.edu
+redpanda.edu             3600000      A     198.41.0.4
+redpanda.edu             3600000      AAAA  2001:503:ba3e::2:30
 ; 
 ; 
 ;
-.                        3600000      NS    a.com
-a.com                    3600000      A     170.247.170.2
-a.com                    3600000      AAAA  2801:1b8:10::b
+.                        3600000      NS    a.edu
+a.edu                    3600000      A     170.247.170.2
+a.edu                    3600000      AAAA  2801:1b8:10::b
 ; 
 ; 
 ;
-.                        3600000      NS    b.com        
-b.com                    3600000      A     192.33.4.12
-b.com                    3600000      AAAA  2001:500:2::c
+.                        3600000      NS    b.edu        
+b.edu                    3600000      A     192.33.4.12
+b.edu                    3600000      AAAA  2001:500:2::c
 ; 

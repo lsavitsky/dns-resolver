@@ -22,7 +22,7 @@ class DNS_Recursive_resolver:
         """
         self.root_resolver = DNS_Root_resolver(root_file)
         self.tld_resolvers = None # this will be set in the resolve method
-        self.authoritative_resolvers = None # this will be set in the resolve method
+        self.authoritative_resolvers = None # this will be set in the resolve method  
 
     def resolve(self, domain: str) -> str:
         """

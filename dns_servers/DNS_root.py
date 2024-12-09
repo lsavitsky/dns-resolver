@@ -47,7 +47,7 @@ class DNS_Root_resolver(Resolver):
         
 def main():
     root_resolver = DNS_Root_resolver()
-    root_resolver.print_result(root_resolver.resolve("Paola.ORG."))
+    root_resolver.print_result(root_resolver.resolve("Paola.ORG.")) 
     
 if __name__ == "__main__":
     main()

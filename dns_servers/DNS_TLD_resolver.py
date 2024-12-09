@@ -8,7 +8,7 @@ TLD_MAPS = Path('tld_mappings/')
 
 class DNS_TLD_resolver(Resolver):
     """
-    ISP DNS resolver. Resolves queries using an ISP cache,
+    ISP DNS resolver. Resolves queries using an ISP cache, 
     falling back to the main resolver if necessary.
     """
 
