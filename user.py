@@ -106,8 +106,10 @@ def main():
         
     print("QTYPE: ", QTYPE[record_type])
 
+    dns_query_active= controller(QNAME(dns_name, EncodingType[encoding_type]), QTYPE[record_type] , QCLASS.IN)
+
     
-    
+def Tests(dns_name, record_type, encoding_type): 
     encodePacketStart=time.perf_counter() # For data Collection 
     dns_query_active= controller(QNAME(dns_name, EncodingType[encoding_type]), QTYPE[record_type] , QCLASS.IN)
     
@@ -134,6 +136,20 @@ def main():
         
         writer.writerow([dns_name, record_type, encoding_type,
             encodePacketStart, encodePacketEnd, dnsResStart, dnsResEnd, encode_duration, dns_resolution_duration, total_duration])
+        
+def main_collect_tunneling_data():
+    dns_name = "example.com"
+    record_types = ['A', 'AAAA']
+    encoding_types = EncodingType.__members__
+
+
+    for _ in range(200):
+        for record_type in record_types:
+            for encoding_type in encoding_types:
+                Tests(dns_name, record_type, encoding_type)
+
+    
 
 if __name__ == "__main__":
-    main()
+    # main()
+    main_collect_tunneling_data()
