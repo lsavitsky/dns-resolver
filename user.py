@@ -131,8 +131,8 @@ def Tests(dns_name, record_type, encoding_type):
     
         if file.tell() == 0: #IF needed write header
             writer.writerow([
-                "domain", "encoding_type",
-                "encodePacketStart", "encodePacketEnd", "dnsResStart", "dnsResEnd", "encode_duration","dns_resolution_duration","total_duration" ])
+                "domain", "record_type", "encoding_type",
+                "encodePacketStart", "encodePacketEnd", "dnsResStart", "dnsResEnd", "encode_duration","dns_resolution_duration", "total_duration" ])
         
         writer.writerow([dns_name, record_type, encoding_type,
             encodePacketStart, encodePacketEnd, dnsResStart, dnsResEnd, encode_duration, dns_resolution_duration, total_duration])
