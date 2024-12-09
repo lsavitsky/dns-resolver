@@ -77,7 +77,7 @@ class Resolver:
             for line in file:
                 record_type, value, TLD_file_name =  line.strip().split(',')
                 
-                print(f"Record Type: {record_type}, Value: {value}, TLD File Name: {TLD_file_name}")
+                # print(f"Record Type: {record_type}, Value: {value}, TLD File Name: {TLD_file_name}")
                 if A == value: 
                     return ip_mapping / Path("caches/") / TLD_file_name
                 
