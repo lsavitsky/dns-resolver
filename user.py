@@ -1,5 +1,4 @@
 import sys 
-import os
 
 sys.path.append("dns_servers/DNS_Query/dns_construction/")
 import DNS_Tunnel_enums
