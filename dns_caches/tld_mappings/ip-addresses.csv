@@ -1,1 +1,9 @@
-record_type, value, AUTH_file_name
+record_type,value,TLD_file_name
+A,93.184.216.34,TLD-COM.cache
+A,202.12.27.33,TLD-ORG.cache
+A,198.51.100.2,TLD-NET.cache
+A,203.0.113.3,TLD-EDU.cache
+AAAA,2606:2800:220:1:248:1893:25c8:1946,TLD-COM.cache
+AAAA,2001:db8::1,TLD-ORG.cache
+AAAA,2001:db8:85a3::8a2e:370:7334,TLD-NET.cache
+AAAA,2001:db8:dead:beef::1,TLD-EDU.cache

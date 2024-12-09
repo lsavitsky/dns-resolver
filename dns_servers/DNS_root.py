@@ -17,6 +17,7 @@ class DNS_Root_resolver(Resolver):
 
         :param root_cache: Path to the root cache file.
         """
+        
         super().__init__(root_cache)
 
     def resolve(self, domain: str) -> dict:

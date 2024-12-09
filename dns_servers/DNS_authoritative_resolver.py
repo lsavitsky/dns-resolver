@@ -1,13 +1,16 @@
-from dns_resolver import DNSResolver
+from DNS_resolver import Resolver
 from pathlib import Path
+from enum import Enum
 
-class DNS_Authoritative_resolver(DNSResolver):
+AUTH_MAPS = Path('/auth_mappings/')
+
+class DNS_Authoritative_resolver(Resolver):
     """
     Authoritative DNS resolver for a specific zone.
     """
-    def __init__(self, file: Path):
-        super().__init__(file)
-        
+    def __init__(self, tld_response: Enum):
+        self.auth_file = super().find_resolver_file(tld_response, AUTH_MAPS)
+        super().__init__(self.auth_file)
         
     def resolve(self, domain: str) -> str:
         """
@@ -16,4 +19,4 @@ class DNS_Authoritative_resolver(DNSResolver):
         :param domain: The domain name to resolve.
         :return: Resolved IP address or 'NXDOMAIN' if not found.
         """
-        pass
+        return self.cache_map.Direct.value.get(domain, "NXDOMAIN")

@@ -1,0 +1,9 @@
+record_type,value,AUTH_file_name
+A,192.0.2.1,COM.cache
+A,192.0.2.2,ORG.cache
+A,192.0.2.3,NET.cache
+A,192.0.2.4,EDU.cache
+AAAA,2001:db8::1,COM.cache
+AAAA,2001:db8::2,ORG.cache
+AAAA,2001:db8::3,NET.cache
+AAAA,2001:db8::4,EDU.cache
