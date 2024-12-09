@@ -56,21 +56,33 @@ class DNS_Root_resolver(Resolver):
 
         return tld_map
 
-    def resolve(self, tld: str) -> dict:
+    def resolve(self, domain: str) -> dict:
         """
-        Resolves a TLD to its root server information.
-
-        :param tld: TLS SERVER ( 'com', 'org').
+        \nResolves a domain name to the root server information.
+        \nIf the domain is not found, then the TLD is extracted 
+        \nand used to resolve the root server.
+        
+        \n If the TLD is not found then 'NXDOMAIN' is returned.
+        
+        :param domain: The domain name to resolve.
         :return: Root server info or 'NXDOMAIN' 
         """
-        return self.cache_map.get(tld, "NXDOMAIN")
-        # return self.tld_map.get(tld, "NXDOMAIN")
-
+        direct_result = self.cache_map.Direct.value.get(domain, None)
+        print(f"Resolving {domain} using root cache.")
+        if direct_result:
+            print(f"  Found {domain} in root cache.")
+            return direct_result
+        
+        # fallback to the TLD if the domain is not found
+        print(f"  {domain} not found in root cache.")
+        print("Falling back to TLD...")
+        tld = domain.split('.')[-2] + '.' # get the TLD
+        print(f"Resolving TLD {tld} using root cache.")
+        return self.cache_map.TLD.value.get(tld, "NXDOMAIN")
+        
 def main():
     root_resolver = DNS_Root_resolver()
-    print(root_resolver.resolve("A.ROOT-SERVERS.NET."))
-    print(root_resolver.resolve("B.ROOT-SERVERS.NET."))
-    print(root_resolver.resolve("C.ROOT-SERVERS.NET."))
+    root_resolver.print_result(root_resolver.resolve("Paola.ORG."))
     
 if __name__ == "__main__":
     main()

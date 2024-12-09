@@ -23,7 +23,7 @@ class DNS_ISP_resolver(Resolver):
         :param domain: The domain name to resolve.
         :return: Resolved IP address or 'NXDOMAIN' if not found.
         """
-        return self.cache_map.get(domain, "NXDOMAIN")
+        return self.cache_map.Direct.value.get(domain, "NXDOMAIN")
 
 def main():
     isp_resolver = DNS_ISP_resolver()

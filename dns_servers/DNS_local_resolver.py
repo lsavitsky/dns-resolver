@@ -28,7 +28,7 @@ class DNS_Local_resolver(DNS_ISP_resolver):
         """
         # attempt to resolve the domain using the local cache
         print(f"Resolving {domain} using local cache.")
-        res = self.local_cache.get(domain)
+        res = self.local_cache.Direct.value.get(domain)
         if res:
             print(f"  Found {domain} in local cache.")
             return res  # return res from the local cache
@@ -44,8 +44,6 @@ def main():
     redPanda = resolver.resolve("redpanda.com")
     resolver.print_result(redPanda)
     
-    redPanda = resolver.resolve(".")
-    resolver.print_result(redPanda)
     
 
 if __name__ == "__main__":
