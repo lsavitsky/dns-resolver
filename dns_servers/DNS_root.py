@@ -41,6 +41,7 @@ class DNS_Root_resolver(Resolver):
         print(f"  {domain} not found in root cache.")
         print("Falling back to TLD...")
         tld = domain.split('.')[-2] + '.' # get the TLD
+        
         print(f"Resolving TLD {tld} using root cache.")
         return self.cache_map.TLD.value.get(tld, "NXDOMAIN")
         
