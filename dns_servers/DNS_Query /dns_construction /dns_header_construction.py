@@ -17,7 +17,7 @@ class dns_header:
         self.transaction_id = dns_transaction_ID.random_ID() 
         self.flags= flags
         self.counters= dns_counters() #First it is default
-        
+         
         
     def byte_format_construction(self)-> bytes:
         return(

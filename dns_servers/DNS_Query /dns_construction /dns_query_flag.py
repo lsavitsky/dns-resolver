@@ -338,7 +338,7 @@ if __name__ == "__main__":
     #     ad=False,
     #     cd=False
     # )
-    
+     
     # print(f"Constructed DNS header flags (binary): {bin(header_bits)}")
     # print(f"Constructed DNS header flags (hex): {hex(header_bits)}")
     
