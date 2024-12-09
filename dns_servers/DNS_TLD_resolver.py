@@ -1,6 +1,10 @@
 from dnslib import DNSRecord, DNSError, QTYPE, RCODE, RR
 from pathlib import Path
 from DNS_resolver import Resolver
+from enum import Enum
+import sys 
+
+TLD_MAPS = Path('tld_mappings/')
 
 class DNS_TLD_resolver(Resolver):
     """
@@ -8,13 +12,16 @@ class DNS_TLD_resolver(Resolver):
     falling back to the main resolver if necessary.
     """
 
-    def __init__(self, file: Path = Path("TLD.cache")):
+    def __init__(self, root_response: Enum):
         """
         Initializes the ISP DNS resolver with a cache file.
         
         :param file: Path to the ISP cache file.
         """
-        super().__init__(file)  # inherit initialization from Resolver
+        self.tld_file = super().find_resolver_file(root_response, TLD_MAPS) # get the TLD file based on the root response
+        
+        print(f"Loading TLD cache file {self.tld_file}...")
+        super().__init__(self.tld_file)
         
     def resolve(self, domain: str) -> str:
         """
@@ -23,6 +30,7 @@ class DNS_TLD_resolver(Resolver):
         :param domain: The domain name to resolve.
         :return: Resolved IP address or 'NXDOMAIN' if not found.
         """
+        
         return self.cache_map.Direct.value.get(domain, "NXDOMAIN")
 
 def main():

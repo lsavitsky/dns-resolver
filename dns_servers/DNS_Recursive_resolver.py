@@ -5,13 +5,13 @@ from pathlib import Path
 # Importing the resolvers
 from DNS_root import DNS_Root_resolver  # root resolver
 from DNS_TLD_resolver import DNS_TLD_resolver  # tld resolver
-from DNS_authoritative_resolver import DNS_authoritative_resolver  # authoritative resolver
+from DNS_authoritative_resolver import DNS_Authoritative_resolver  # authoritative resolver
 
 class DNS_Recursive_resolver:
     """
     Recursive DNS server that resolves domain names using local, ISP, and root server caches.
     """
-    def __init__(self, root_file: Path("root.cache"), tld_file: Path = Path("TLD.cache"), authoritative_file: Path = Path("authorative.cache")):
+    def __init__(self, root_file: Path = Path("root.cache"), tld_file: Path = Path("TLD.cache"), authoritative_file: Path = Path("authorative.cache")):
         """
         Initializes the recursive DNS server.
         #TODO Fix this docstring
@@ -21,8 +21,8 @@ class DNS_Recursive_resolver:
         :param port: Port to communicate with DNS servers (default is 53).
         """
         self.root_resolver = DNS_Root_resolver(root_file)
-        self.tld_resolvers = DNS_TLD_resolver(tld_file)
-        self.authoritative_resolvers = DNS_authoritative_resolver(authoritative_file)
+        self.tld_resolvers = None # this will be set in the resolve method
+        self.authoritative_resolvers = None # this will be set in the resolve method
 
     def resolve(self, domain: str) -> str:
         """
@@ -33,31 +33,33 @@ class DNS_Recursive_resolver:
         """
         parts = domain.split('.')
         if len(parts) < 2:
-            return "NXDOMAIN" # Enough parts of it neededd
+            return "NXDOMAIN" # Enough parts of it needed
 
         tld = parts[-1]
         zone = f"{parts[-2]}.{tld}"
 
-        # Query Root Resolver
-        root_info = self.root_resolver.resolve(".") # DNS_root.py
-        if root_info == "NXDOMAIN":
+        # Step 1: Query Root Resolver
+        root_response = self.root_resolver.resolve(domain)
+        if root_response == "NXDOMAIN":
             return "NXDOMAIN"
 
-        tld_ns = root_info['NS'] # This is the ns root info
-        tld_ip = root_info['IP'][0]  #Change for the IP selection desired. right now it is the first one found
-
-        # Query TLD Resolver
-        tld_resolver = self.tld_resolvers.get(tld_ns)
-        if not tld_resolver:
+        if not hasattr(root_response, 'NS'):
+            return root_response
+        
+        # Step 2: Query TLD Resolver
+        self.tld_resolvers = DNS_TLD_resolver(root_response)
+        tld_response = self.tld_resolvers.resolve(domain) # defined in DNS_TLD_resolver.py
+        
+        if tld_response == "NXDOMAIN":
             return "NXDOMAIN"
+        
+        # Step 3: Query Authoritative Resolver
+        self.authoritative_resolvers = DNS_Authoritative_resolver(tld_response)
+        return self.authoritative_resolvers.resolve(domain)
 
-        authoritative_ns = tld_resolver.resolve(zone)
-        if authoritative_ns == "NXDOMAIN":
-            return "NXDOMAIN"
-
-        # Query Authoritative Resolver
-        authoritative_resolver = self.authoritative_resolvers.get(authoritative_ns)
-        if not authoritative_resolver:
-            return "NXDOMAIN"
-
-        return authoritative_resolver.resolve(domain)
+def main():
+    recursive_resolver = DNS_Recursive_resolver()
+    print(recursive_resolver.resolve("Paola.ORG."))
+    
+if __name__ == "__main__":
+    main()

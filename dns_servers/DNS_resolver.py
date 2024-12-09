@@ -57,6 +57,34 @@ class Resolver:
         """
         raise NotImplementedError("Subclasses must implement the resolve method.")
     
+    @staticmethod
+    def find_resolver_file(response: enum.Enum, ip_mapping: Path) -> Path:
+        """
+        Finds the TLD cache file for a given TLD.
+
+        :param tld: The top-level domain to find the cache file for.
+        :return: Path to the TLD cache file.
+        """
+        ip_addresses =  Path("../dns_caches/") / ip_mapping / f"ip-addresses.csv"
+        
+        print(f"Finding TLD cache file for {ip_addresses}...")
+        
+        A = response.A.value
+        AAAA = response.AAAA.value
+        
+        # open 
+        with open(ip_addresses, 'r') as file:
+            for line in file:
+                record_type, value, TLD_file_name =  line.strip().split(',')
+                
+                # print(f"Record Type: {record_type}, Value: {value}, TLD File Name: {TLD_file_name}")
+                if A == value: 
+                    return ip_mapping / Path("caches/") / TLD_file_name
+                
+                if AAAA == value:
+                    return ip_mapping / Path("caches/") /  TLD_file_name
+                
+        return "tld.cache"
     
     def print_result(self, res: object) -> None:
         """
