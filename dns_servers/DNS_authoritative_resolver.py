@@ -14,7 +14,7 @@ class DNS_Authoritative_resolver(Resolver):
         
     def resolve(self, domain: str) -> str:
         """
-        Resolves a domain name using the authoritative cache.
+        Resolves a domain name using the authoritative cache. 
         
         :param domain: The domain name to resolve.
         :return: Resolved IP address or 'NXDOMAIN' if not found.
