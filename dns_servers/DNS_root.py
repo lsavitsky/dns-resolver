@@ -6,6 +6,7 @@ import sys
 
 sys.path.append("../dns_caches/")
 
+
 class DNS_Root_resolver(Resolver):
     """
     Root DNS resolver that provides information about TLD DNS servers.
