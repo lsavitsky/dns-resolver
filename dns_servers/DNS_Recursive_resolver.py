@@ -47,7 +47,7 @@ class DNS_Recursive_resolver:
             return root_info
         
         # Step 2: Query TLD Resolver
-        tld_resolver = self.tld_resolvers.resolve(tld) # defined in DNS_TLD_resolver.py
+        tld_resolver = self.tld_resolvers.resolve(domain) # defined in DNS_TLD_resolver.py
         if not tld_resolver:
             return "NXDOMAIN"
         
