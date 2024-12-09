@@ -1,0 +1,32 @@
+;       This file holds the information on local name servers needed to 
+;       initialize cache of Internet domain name servers
+;       (e.g. reference this file in the "cache  .  <file>"
+;       configuration file of BIND domain name servers). 
+; 
+;       This file is made available by InterNIC 
+;       under anonymous FTP as
+;           file                /domain/named.cache 
+;           on server           FTP.INTERNIC.NET
+;       -OR-                    RS.INTERNIC.NET
+;
+;       last update:     November 07, 2024
+;       related version of root zone:     2024110701
+; 
+; 
+;
+.                        3600000      NS    redpanda.org
+redpanda.org             3600000      A     198.41.0.4
+redpanda.org             3600000      AAAA  2001:503:ba3e::2:30
+; 
+; 
+;
+.                        3600000      NS    a.org
+a.org                    3600000      A     170.247.170.2
+a.org                    3600000      AAAA  2801:1b8:10::b
+; 
+; 
+;
+.                        3600000      NS    b.org        
+b.org                    3600000      A     192.33.4.12
+b.org                    3600000      AAAA  2001:500:2::c
+; 

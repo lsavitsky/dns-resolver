@@ -22,14 +22,14 @@ class DNS_TLD_resolver(Resolver):
         print(f"Loading TLD cache file {self.tld_file}...")
         super().__init__(self.tld_file)
         
-    def resolve(self, domain: str) -> str:
+    def resolve(self) -> str:
         """
         Resolves a domain name using the ISP cache.
         
         :param domain: The domain name to resolve.
         :return: Resolved IP address or 'NXDOMAIN' if not found.
         """
-        
+        domain = self.dns_query.q.qname.domain_name
         return self.cache_map.Direct.value.get(domain, "NXDOMAIN")
 
 def main():

@@ -128,25 +128,29 @@ class QNAME():
             i += length
         return ".".join(labels)
     
-    def encode_tunnel(self, data: str, subdomain:str ) -> bytes:
+    def encode_tunnel(self, data: str ) -> bytes:
         """
         encode_tunnel - encodes with the given way of encoding
         :param data: the middle of the domain section for example: example in example.com
-        :param subdomain: extension like .com
+        #TODO - Fix these docstrings...
+        :param extension: extension like .com
         :return: The encoded data as bytes.
         """
-        encoded_data = self.encoding.encode(data) #using given
-        tunneling_qname = f"{encoded_data}.{subdomain}" #passed encoded .com
-        return self.__class__(tunneling_qname).encode()
+        
+        domain_list = data.split('.')
+        word, extension = domain_list[0], domain_list[1]
+        # encoded_data = self.encoding.encode(word) #using given
+        tunneling_qname = f"{word}.{extension}" #passed encoded .com
+        return self.encoding.encode(tunneling_qname)
     
     def decode_tunnel(self, qname:bytes )-> str:
         """
         :param qname: The encoded QNAME in DNS label format.
         :return: The decoded data as a string.
         """
-        domain_name = self.decode(qname) #initial decode
-        encoded_data, _ = domain_name.split(".", 1) #split the end off .com
-        return self.encoding.decode(encoded_data) # decode with alt of the encode
+        #domain_name = self.decode(qname) #initial decode
+        #encoded_data, _ = domain_name.split(".", 1) #split the end off .com
+        return self.encoding.decode(qname) # decode with alt of the encode
     
     
 class q_construction:
@@ -199,7 +203,7 @@ if __name__ == "__main__":
 
     # Encode data into QNAME
     encoded_qname = qname.encode_tunnel(data, subdomain)
-    print(f"Encoded Tunneling QNAME (hex): {encoded_qname.hex()}")
+    print(f"Encoded Tunneling QNAME (Base32): {encoded_qname()}")
 
     # Decode tunneled data from QNAME
     decoded_data = qname.decode_tunnel(encoded_qname)

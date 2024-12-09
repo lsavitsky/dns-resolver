@@ -1,26 +1,34 @@
 from pathlib import Path
 import sys 
 import enum
+import os
 
-cache_path = Path("../dns_caches/")
+cache_path = Path("dns_caches")
+
+
 
 sys.path.append("..")
 from AuthMapper import AuthMapper
 
-sys.path.append("../validation/") 
-import InvalidCacheLineError
-import InvalidRecordTypeError
+sys.path.append("DNS_Query/dns_construction/")
+from dns_packet import dns_packet
+
+# sys.path.append("../validation/")
+# print(sys.path)
+# import InvalidCacheLineError
+# import InvalidRecordTypeError
 
 class Resolver:
     """
     Base DNS Resolver class. Provides a method for reading DNS cache files.
     """
-    def __init__(self, file: Path):
+    def __init__(self, dns_query: dns_packet, file: Path):
         """
         Initializes the resolver with a cache file path.
         
         :param file: Path to the DNS cache file.
         """
+        self.dns_query = dns_query
         self.file_cache = file
         self.cache_map = self.read_dns_cache(file) # initialize the cache data
 
@@ -31,22 +39,23 @@ class Resolver:
         :param file: Path to the cache file.
         :return: Dictionary of domain-to-IP mappings.
         """
-        file = cache_path / file
+        file = Path(os.getcwd()) / cache_path / file
         
         print(f"Reading DNS cache file {file}...")  
+        # Path(os.getcwd())
         
         if not file.exists():
-            print(f"Error: Cache file {file} does not exist.")
-            return {}
+            raise ValueError(f"Error: Cache file {file} does not exist.")
+        
         try:
+            print("Found")
             return AuthMapper(file).map
         except FileNotFoundError:
-            print(f"Error: Cache file {file} not found.")
+            raise FileNotFoundError(FileNotFoundError)
         except PermissionError:
-            print(f"Error: Permission denied for file {file}.")
+            raise ValueError(f"Error: Permission denied for file {file}.")
         except Exception as e:
-            print(f"Unexpected error while reading DNS cache file: {e}")
-        return {}
+            raise ValueError(f"Unexpected error while reading DNS cache file: {e}")
     
     def resolve(self, domain: str) -> str:
         """
@@ -65,7 +74,7 @@ class Resolver:
         :param tld: The top-level domain to find the cache file for.
         :return: Path to the TLD cache file.
         """
-        ip_addresses =  Path("../dns_caches/") / ip_mapping / f"ip-addresses.csv"
+        ip_addresses =  Path(os.getcwd()) / cache_path / ip_mapping / f"ip-addresses.csv"
         
         print(f"Finding TLD cache file for {ip_addresses}...")
         
@@ -106,5 +115,5 @@ class Resolver:
                 print("  NS:", res.NS.value)
         else:
             # Handle unexpected record types
-            raise InvalidRecordTypeError.InvalidRecordTypeError(f"Invalid record type: {type(res)}")
+            raise ValueError()
 

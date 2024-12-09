@@ -1,10 +1,13 @@
 """
 Refence: https://www.iana.org/domains/root/files    - for the root file
 """
-from dnslib import DNSRecord, DNSError, QTYPE, RCODE, RR
 import sys 
 from pathlib import Path
 from DNS_ISP_resolver import DNS_ISP_resolver
+
+sys.path.append("DNS_Query/dns_construction/")
+from dns_packet import dns_packet
+
 
 # This is a simple DNS resolver that can resolve certain types of DNS queries.s
 class DNS_Local_resolver(DNS_ISP_resolver):
@@ -12,20 +15,24 @@ class DNS_Local_resolver(DNS_ISP_resolver):
     Local DNS resolver. Resolves queries using a local cache,
     falling back to the ISP resolver if necessary.
     """
-    def __init__(self, local_file: Path = Path("local.cache"), isp_file: Path = Path("ISP.cache")):
+    def __init__(self, dns_query: dns_packet, local_file: Path = Path("local.cache"), isp_file: Path = Path("ISP.cache")):
         """
         Initialize the local resolver with its own cache and the ISP resolver's cache.
         """
-        super().__init__(isp_file)  # create the ISP resolver (fallback)
+        print("Setting up Local")
+        super().__init__(dns_query, isp_file)  # create the ISP resolver (fallback)
         self.local_cache = self.read_dns_cache(local_file)  # Load the local cache 
-    
-    def resolve(self, domain: str) -> str:
+
+        
+    def resolve(self) -> str:
         """
         Check for the dns inside of the map. if it exists yay.
         if not then super the parent ISP
         :param domain: The domain name to resolve.
         :return: Resolved IP address or 'NXDOMAIN' if not found.
         """
+        domain = self.dns_query.q.qname.domain_name
+
         # attempt to resolve the domain using the local cache
         print(f"Resolving {domain} using local cache.")
         res = self.local_cache.Direct.value.get(domain)
@@ -36,7 +43,7 @@ class DNS_Local_resolver(DNS_ISP_resolver):
         print(f"  {domain} not found in local cache.")
         print("Falling back to ISP resolver...")
         # Fallback to the ISP resolver if not found in the local cache
-        return super().resolve(domain)
+        return super().resolve()
   
 # test the DNS_Local_resolver  
 def main():

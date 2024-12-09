@@ -4,23 +4,25 @@ from collections import defaultdict
 from DNS_resolver import Resolver
 import sys
 
-sys.path.append("../dns_caches/")
-
+sys.path.append("DNS_Query/dns_construction/")
+from dns_packet import dns_packet
 
 class DNS_Root_resolver(Resolver):
     """
     Root DNS resolver that provides information about TLD DNS servers.
     """
-    def __init__(self, root_cache: Path = Path("root.cache")):
+    def __init__(self, dns_query: dns_packet, root_cache: Path = Path("root.cache")):
         """
         Initializes the Root DNS Resolver by loading the root cache.
 
         :param root_cache: Path to the root cache file.
         """
-        
-        super().__init__(root_cache)
 
-    def resolve(self, domain: str) -> dict:
+        print("Setting up root")
+        super().__init__(dns_query, root_cache)
+        print("Root map", self.cache_map)
+
+    def resolve(self) -> dict:
         """
         \nResolves a domain name to the root server information.
         \nIf the domain is not found, then the TLD is extracted 
@@ -31,6 +33,7 @@ class DNS_Root_resolver(Resolver):
         :param domain: The domain name to resolve.
         :return: Root server info or 'NXDOMAIN' 
         """
+        domain = self.dns_query.q.qname.domain_name
         direct_result = self.cache_map.Direct.value.get(domain, None)
         print(f"Resolving {domain} using root cache.")
         if direct_result:
