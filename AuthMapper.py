@@ -111,27 +111,6 @@ class AuthMapper:
                     raise InvalidRecordTypeError(record)
         return res
 
-    def dict_to_enum(self, data, enum_name):
-        """
-        Converts a nested dictionary into nested Enums.
-
-        :param data: The dictionary to convert.
-        :param enum_name: The base name for the Enum.
-        :return: An Enum representing the data.
-        """
-        if not isinstance(data, dict):
-            return data 
-
-        enum_dict = {}
-        for key, value in data.items():
-            print(key, value)
-            if isinstance(value, dict):
-                enum_dict[key] = self.dict_to_enum(value, f"{enum_name}")
-            else:
-                enum_dict[key] = value
-
-        return Enum(enum_name, enum_dict)
-
     def create_dyn_enum(self):
         """
         Creates dynamic enumerations for root server records.
@@ -143,14 +122,31 @@ class AuthMapper:
         """
         cache_data = self.read_cache_save_dic(self.file)
 
+        catgory_data = {}
         
-        return self.dict_to_enum(cache_data, "CacheData")
+        for category, values in cache_data.items():
+            catgory_data[category] = {}
+            
+            for rootserver, records in values.items():
+
+                enum_data = {}
+                if "record" in records:
+                    enum_data.update(records["record"])
+                    enum_data["ttl"] = records["ttl"]
+                else:
+                    raise ValueError(f"No valid records found for root server: {rootserver}")
+
+                catgory_data[category][rootserver] = Enum(f"{rootserver}", enum_data)
+
+        return Enum("Category", catgory_data)
+    
     
 def main ():
     file = "dns_caches/root.cache"
     auth_mapper = AuthMapper(file).map
 
-    print(auth_mapper.Direct)
+    print(auth_mapper.TLD.value['ORG-TLD.DNS.NET.'].A.value)
+    print(auth_mapper.Direct.value['A.ROOT-SERVERS.NET.'].AAAA.value)
     # print(auth_mapper['.'].keys())
     # print(auth_mapper['.']['redpanda.NET.'].A.value)
     # print(auth_mapper['TLD'].keys())
