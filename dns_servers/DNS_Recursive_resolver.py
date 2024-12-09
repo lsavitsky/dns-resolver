@@ -8,7 +8,7 @@ class DNS_Recursive_resolver:
     """
     Recursive DNS server that resolves domain names using local, ISP, and root server caches.
     """
-    def __init__(self, root_resolver: Path, tld_resolvers: Path =Path(""), authoritative_resolvers: Path =Path("")):
+    def __init__(self, root_file: Path = Path("root.cache"), tld_file: Path =Path(""), authoritative_file: Path =Path("")):
         """
         Initializes the recursive DNS server.
         #TODO Fix this docstring
@@ -17,7 +17,7 @@ class DNS_Recursive_resolver:
         :param root_cache: Path to the root DNS cache file.
         :param port: Port to communicate with DNS servers (default is 53).
         """
-        self.root_resolver = root_resolver
+        self.root_resolver = DNS_Root_resolver(root_file)
         self.tld_resolvers = tld_resolvers
         self.authoritative_resolvers = authoritative_resolvers
 

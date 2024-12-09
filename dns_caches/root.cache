@@ -86,7 +86,14 @@ L.ROOT-SERVERS.NET.      3600000      AAAA  2001:500:9f::42
 ; 
 ; OPERATED BY WIDE
 ;
-.                        3600000      NS    M.ROOT-SERVERS.NET.
-M.ROOT-SERVERS.NET.      3600000      A     202.12.27.33
-M.ROOT-SERVERS.NET.      3600000      AAAA  2001:dc3::35
+.                        3600000      NS    redpanda.NET.
+redpanda.NET.            3600000      A     202.12.27.33
+redpanda.NET.            3600000      AAAA  2001:dc3::35
+;
+;
+;
+ORG.                     3600000      NS    ORG-TLD.DNS.NET.
+ORG-TLD.DNS.NET.         3600000      A     202.12.27.33
+ORG-TLD.DNS.NET.         3600000      AAAA  2001:dc3::35
+;
 ; End of file
