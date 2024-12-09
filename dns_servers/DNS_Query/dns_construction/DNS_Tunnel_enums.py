@@ -108,6 +108,5 @@ class EncodingType(Enum):
             return result 
         else:
             print("How did you manage to forget to add it to the decode function..??")
-            raise ValueError(f"Unsupported encoding type: {self.value}")
-                  
+            raise ValueError(f"Unsupported encoding type: {self.value}")  
     
