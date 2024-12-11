@@ -2,7 +2,7 @@
 
 *** This Project aims to develop a from scratch DNS Resolution library ***
 
-- **User.py** offers simple human interaction and is very easy to use.
+- **_user.py** offers simple human interaction and is very easy to use.
 - Customizable application for specific testing.
 - Offers less complex 'default' values for straightforward experimentation.
 - Easily scaled for broader use.
