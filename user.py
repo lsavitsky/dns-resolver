@@ -74,7 +74,7 @@ def controller(qname: QNAME, qtype: QTYPE = QTYPE.A, qclass: QCLASS = QCLASS.IN,
     dns_query_active.q.qname.domain_name = dns_query_active.q.qname.encode_tunnel(dns_query_active.q.qname.domain_name)
     return dns_query_active
 
-def main():
+def dataMain():
     try:
         print("\nWelcome to the DNS Query Tool!\n")
 
@@ -104,7 +104,7 @@ def main():
     except KeyboardInterrupt:
         print("\nOperation canceled by user.")
         
-    print("QTYPE: ", QTYPE[record_type])
+    #print("QTYPE: ", QTYPE[record_type])
 
     dns_query_active= controller(QNAME(dns_name, EncodingType[encoding_type]), QTYPE[record_type] , QCLASS.IN)
 

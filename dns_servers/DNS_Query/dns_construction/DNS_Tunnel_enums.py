@@ -26,8 +26,8 @@ class EncodingType(Enum):
         """
             Encode data based on the data ad type
         """
-        print("ENCODE: ", message.encode())
-        print("*")
+        #print("ENCODE: ", message.encode())
+        #print("*")
         if self == EncodingType.Base16:
             return base64.b16encode(message.encode()).decode()
         elif self == EncodingType.Base32:

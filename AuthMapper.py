@@ -95,7 +95,7 @@ class AuthMapper:
         :return: Dictionary with root server as key and enumeration as value.
         
         >>> auth_mapper = AuthMapper("dns_caches/root.cache").create_dyn_enum()
-        ... print(auth_mapper.TLD.value['ORG.'].NS.value)
+        ... #####print(auth_mapper.TLD.value['ORG.'].NS.value)
         ORG-TLD.DNS.NET.
         """
         cache_data = self.read_cache_save_dic(self.file) # read the cache file and save the records in a dictionary
