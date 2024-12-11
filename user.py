@@ -109,7 +109,7 @@ def dataMain():
     dns_query_active= controller(QNAME(dns_name, EncodingType[encoding_type]), QTYPE[record_type] , QCLASS.IN)
 
     
-def Tests(dns_name, record_type, encoding_type): 
+def tests(dns_name, record_type, encoding_type): 
     encodePacketStart=time.perf_counter() # For data Collection 
     dns_query_active= controller(QNAME(dns_name, EncodingType[encoding_type]), QTYPE[record_type] , QCLASS.IN)
     
@@ -146,7 +146,7 @@ def main_collect_tunneling_data():
     for _ in range(200):
         for record_type in record_types:
             for encoding_type in encoding_types:
-                Tests(dns_name, record_type, encoding_type)
+                tests(dns_name, record_type, encoding_type)
 
     
 
