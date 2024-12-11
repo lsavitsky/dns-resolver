@@ -18,9 +18,9 @@ class DNS_Root_resolver(Resolver):
         :param root_cache: Path to the root cache file.
         """
 
-        print("Setting up root")
+        #("Setting up root")
         super().__init__(dns_query, root_cache)
-        print("Root map", self.cache_map)
+        #print("Root map", self.cache_map)
 
     def resolve(self) -> dict:
         """
@@ -35,17 +35,17 @@ class DNS_Root_resolver(Resolver):
         """
         domain = self.dns_query.q.qname.domain_name
         direct_result = self.cache_map.Direct.value.get(domain, None)
-        print(f"Resolving {domain} using root cache.")
+        #print(f"Resolving {domain} using root cache.")
         if direct_result:
-            print(f"  Found {domain} in root cache.")
+            #print(f"  Found {domain} in root cache.")
             return direct_result
         
         # fallback to the TLD if the domain is not found
-        print(f"  {domain} not found in root cache.")
-        print("Falling back to TLD...")
+        #print(f"  {domain} not found in root cache.")
+        #print("Falling back to TLD...")
         tld = domain.split('.')[-2] + '.' # get the TLD
         
-        print(f"Resolving TLD {tld} using root cache.")
+        #print(f"Resolving TLD {tld} using root cache.")
         return self.cache_map.TLD.value.get(tld, "NXDOMAIN")
         
 def main():

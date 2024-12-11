@@ -1,4 +1,3 @@
-import socket
 from pathlib import Path
 
 # Importing the resolvers
@@ -26,11 +25,11 @@ class DNS_Recursive_resolver(Resolver):
         """
         self.dns_query = dns_query
 
-        print("Setting up recursive")
+        #print("Setting up recursive")
         self.root_resolver = DNS_Root_resolver(dns_query, root_file)
         self.tld_resolvers = None # this will be set in the resolve method
         self.authoritative_resolvers = None # this will be set in the resolve method  
-        print("Recursive set-up done")
+        #print("Recursive set-up done")
 
     def resolve(self) -> str:
         """

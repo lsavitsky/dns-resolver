@@ -41,14 +41,14 @@ class Resolver:
         """
         file = Path(os.getcwd()) / cache_path / file
         
-        print(f"Reading DNS cache file {file}...")  
+        #print(f"Reading DNS cache file {file}...")  
         # Path(os.getcwd())
         
         if not file.exists():
             raise ValueError(f"Error: Cache file {file} does not exist.")
         
         try:
-            print("Found")
+            #print("Found")
             return AuthMapper(file).map
         except FileNotFoundError:
             raise FileNotFoundError(FileNotFoundError)
@@ -76,7 +76,7 @@ class Resolver:
         """
         ip_addresses =  Path(os.getcwd()) / cache_path / ip_mapping / f"ip-addresses.csv"
         
-        print(f"Finding TLD cache file for {ip_addresses}...")
+        #print(f"Finding TLD cache file for {ip_addresses}...")
         
         A = response.A.value
         AAAA = response.AAAA.value

@@ -20,10 +20,10 @@ class DNS_Safe_Resolver(DNS_Recursive_resolver):
         
         :param file: Path to the ISP cache file.
         """
-        print("Setting up safe")
+        #print("Setting up safe")
         super().__init__(dns_query, file)  # inherit initialization from Resolver
         self.safe_map = self.read_dns_cache(file)
-        print("Safe set-up done")
+        #print("Safe set-up done")
         
     def resolve(self) -> str:
         """

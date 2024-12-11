@@ -19,7 +19,7 @@ class DNS_TLD_resolver(Resolver):
         """
         self.tld_file = super().find_resolver_file(root_response, TLD_MAPS) # get the TLD file based on the root response
         
-        print(f"Loading TLD cache file {self.tld_file}...")
+        #print(f"Loading TLD cache file {self.tld_file}...")
         super().__init__(self.tld_file)
         
     def resolve(self) -> str:

@@ -19,7 +19,7 @@ class DNS_ISP_resolver(DNS_Safe_Resolver):
         
         :param file: Path to the ISP cache file.
         """
-        print("Setting up ISP")
+        #print("Setting up ISP")
         super().__init__(dns_query, file)  # inherit initialization from Resolver
         self.ISP_map = self.read_dns_cache(file)
     

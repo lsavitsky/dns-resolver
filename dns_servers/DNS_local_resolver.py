@@ -19,7 +19,7 @@ class DNS_Local_resolver(DNS_ISP_resolver):
         """
         Initialize the local resolver with its own cache and the ISP resolver's cache.
         """
-        print("Setting up Local")
+        # print("Setting up Local")
         super().__init__(dns_query, isp_file)  # create the ISP resolver (fallback)
         self.local_cache = self.read_dns_cache(local_file)  # Load the local cache 
 
@@ -34,14 +34,14 @@ class DNS_Local_resolver(DNS_ISP_resolver):
         domain = self.dns_query.q.qname.domain_name
 
         # attempt to resolve the domain using the local cache
-        print(f"Resolving {domain} using local cache.")
+        # print(f"Resolving {domain} using local cache.")
         res = self.local_cache.Direct.value.get(domain)
         if res:
-            print(f"  Found {domain} in local cache.")
+            # print(f"  Found {domain} in local cache.")
             return res  # return res from the local cache
 
-        print(f"  {domain} not found in local cache.")
-        print("Falling back to ISP resolver...")
+        # print(f"  {domain} not found in local cache.")
+        # print("Falling back to ISP resolver...")
         # Fallback to the ISP resolver if not found in the local cache
         return super().resolve()
   
