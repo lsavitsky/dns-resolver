@@ -1,0 +1,4 @@
+html, ip
+a.html, 127.0.0.1
+b.html, 127.0.0.2
+redpanda.html, 127.0.0.3

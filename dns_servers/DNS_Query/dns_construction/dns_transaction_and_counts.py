@@ -1,6 +1,5 @@
 import random
 
-
 class dns_transaction_ID: 
     @staticmethod
     def random_ID() ->int:
@@ -9,8 +8,6 @@ class dns_transaction_ID:
         :return: 16-bit integer
         """
         return random.getrandbits(16)
-
-
 
 
 class dns_counters:
