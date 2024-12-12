@@ -3,12 +3,11 @@
 *** This Project aims to develop a from scratch DNS Resolution library ***
 
 - **_user.py** offers simple human interaction and is very easy to use.
-- Customizable application for specific testing.
-- Offers less complex 'default' values for straightforward experimentation.
-- Easily scaled for broader use.
-- Optimized for workflow.
-- Can operate independently. Optimal for testing and recreations.
-- Designed for learning environments and development.
+
+**_get_results.py** offers command line testing environment.
+
+**controller.py** defined methods that creates dns query and resolves.
+
 
 ## Example Step by Step: DNS Resolution and DNS Tunneling
 
