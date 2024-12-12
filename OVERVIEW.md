@@ -1,12 +1,12 @@
 ## Project Overview
 
-*** This Project aims to develop a from scratch DNS Resolution library ***
+** This Project aims to develop a from scratch DNS Resolution library **
 
 - **_user.py** offers simple human interaction and is very easy to use.
 
-**_get_results.py** offers command line testing environment.
+- **_get_results.py** offers command line testing environment.
 
-**controller.py** defined methods that creates dns query and resolves.
+- **controller.py** defined methods that creates dns query and resolves.
 
 
 ## Example Step by Step: DNS Resolution and DNS Tunneling
