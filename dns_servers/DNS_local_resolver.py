@@ -1,5 +1,5 @@
 """
-Refence: https://www.iana.org/domains/root/files    - for the root file
+Reference: https://www.iana.org/domains/root/files    - for the root file
 """
 import sys 
 from pathlib import Path
