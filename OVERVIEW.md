@@ -196,11 +196,16 @@ For more detailed information on DNS packets, refer to additional resources.
 *** Extra Information and Helpful Links ***
 
 - **Helpful information on the DNS packet build:**
-  [Project Primer on DNS Packets](https://mislove.org/teaching/cs4700/spring11/handouts/project1-primer.pdf)
+    [Project Primer on DNS Packets](https://mislove.org/teaching/cs4700/spring11/handouts/project1-primer.pdf)
 
 - **Helpful on DNS Resolver, format, and interconnectivity:**
-  [DNS Basics on Null Hardware](https://www.nullhardware.com/blog/dns-basics/)
+    [DNS Basics on Null Hardware](https://www.nullhardware.com/blog/dns-basics/)
 
 - **Helpful base information for in-depth understanding on DNS resolution:**
-  [GeeksforGeeks: Domain Name System (DNS) in Application Layer](https://www.geeksforgeeks.org/domain-name-system-dns-in-application-layer/)
+    [GeeksforGeeks: Domain Name System (DNS) in Application Layer](https://www.geeksforgeeks.org/domain-name-system-dns-in-application-layer/)
 
+- **Helpful base for the cache files:**
+    [IANA root.cache file examples for base reference and understanding](https://www.iana.org/domains/root/files)
+    
+- **Helpful basic information on webserver set up and python files:**
+    [Set up local dns server and webserver in python](https://hackernoon.com/how-to-set-up-a-local-dns-server-with-python)
